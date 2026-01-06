@@ -12,7 +12,7 @@ export const MIN_ZOOM = 0.35;
 export const ZOOM_SCALE_FACTOR = 0.004;
 
 // Movement
-export const SPEED = 200;
+export const SPEED = 400;
 
 // Cell sizing
 export const INITIAL_RADIUS = 20;
@@ -31,7 +31,6 @@ export const FOOD_SPAWN_CHANCE = 0.15;
 // Split mechanics
 export const MIN_SPLIT_RADIUS = 15;
 export const SPLIT_IMPULSE = 800;
-export const SPLIT_DAMPING = 0.03;
 export const MAX_CELLS_PER_PLAYER = 16;
 export const MERGE_DELAY_FRAMES = 600;
 export const MERGE_THRESHOLD = 0.5;

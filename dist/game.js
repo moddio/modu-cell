@@ -51,7 +51,7 @@ var CellEater = (() => {
   var BASE_ZOOM = 1;
   var MIN_ZOOM = 0.35;
   var ZOOM_SCALE_FACTOR = 4e-3;
-  var SPEED = 200;
+  var SPEED = 400;
   var INITIAL_RADIUS = 20;
   var MAX_RADIUS = 200;
   var EAT_RATIO = 1.2;
@@ -62,7 +62,6 @@ var CellEater = (() => {
   var FOOD_SPAWN_CHANCE = 0.15;
   var MIN_SPLIT_RADIUS = 15;
   var SPLIT_IMPULSE = 800;
-  var SPLIT_DAMPING = 0.03;
   var MAX_CELLS_PER_PLAYER = 16;
   var MERGE_DELAY_FRAMES = 600;
   var MERGE_THRESHOLD = 0.5;
@@ -289,7 +288,6 @@ var CellEater = (() => {
           const newBody = newCell.get(modu2.Body2D);
           newBody.impulseX = dx / len * SPLIT_IMPULSE;
           newBody.impulseY = dy / len * SPLIT_IMPULSE;
-          newBody.damping = SPLIT_DAMPING;
           const mergeFrame = game2.world.frame + MERGE_DELAY_FRAMES;
           cellMergeFrame.set(cell.id, mergeFrame);
           cellMergeFrame.set(newCell.id, mergeFrame);

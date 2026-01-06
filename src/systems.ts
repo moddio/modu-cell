@@ -20,7 +20,6 @@ import {
     MERGE_DELAY_FRAMES,
     MERGE_THRESHOLD,
     SPLIT_IMPULSE,
-    SPLIT_DAMPING,
     REPULSION_FACTOR,
     REPULSION_BASE,
     MOVE_DEADZONE,
@@ -260,7 +259,6 @@ export function setupSystems(game: modu.Game): void {
                 const newBody = newCell.get(modu.Body2D);
                 newBody.impulseX = (dx / len) * SPLIT_IMPULSE;
                 newBody.impulseY = (dy / len) * SPLIT_IMPULSE;
-                newBody.damping = SPLIT_DAMPING;
 
                 // Track merge timing
                 const mergeFrame = game.world.frame + MERGE_DELAY_FRAMES;
