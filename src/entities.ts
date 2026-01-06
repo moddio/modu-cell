@@ -21,7 +21,7 @@ export function defineEntities(game: modu.Game): void {
 
     // Camera entity - client-only, excluded from snapshots entirely
     game.defineEntity('camera')
-        .with(modu.Camera2D, { smoothing: 0.15 })
+        .with(modu.Camera2D, { smoothing: 0.25 })
         .syncNone()
         .register();
 }

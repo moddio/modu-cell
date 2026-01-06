@@ -29,6 +29,8 @@ import {
 // Track merge eligibility
 export const cellMergeFrame = new Map<number, number>();
 
+// Track previous positions for actual speed measurement
+
 // Helper: Get client ID string for deterministic sorting
 function getClientIdStr(game: modu.Game, numericId: number): string {
     return game.getClientIdString(numericId) || '';
@@ -168,7 +170,6 @@ export function setupSystems(game: modu.Game): void {
 
             // Debug: log every 60 frames
             if (game.world.frame % 60 === 0) {
-                console.log(`[MOVE] clientId=${clientId} cells=${cells.length} hasInput=${!!playerInput} hasTarget=${!!playerInput?.target}`);
             }
 
             for (const cell of cells) {
@@ -201,11 +202,6 @@ export function setupSystems(game: modu.Game): void {
                     vy += rep.vy;
                 }
 
-                // Debug velocity
-                if (game.world.frame % 30 === 0 && (vx !== 0 || vy !== 0)) {
-                    const speed = Math.sqrt(vx * vx + vy * vy);
-                    console.log(`[VEL] speed=${speed.toFixed(1)} vx=${vx.toFixed(1)} vy=${vy.toFixed(1)}`);
-                }
                 cell.setVelocity(vx, vy);
 
                 // Clamp to world bounds

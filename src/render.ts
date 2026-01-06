@@ -4,6 +4,7 @@
 
 import * as modu from 'modu-engine';
 import { getPlayerCells } from './systems';
+import { cameraChaseEnabled } from './game';
 import {
     WORLD_WIDTH,
     WORLD_HEIGHT,
@@ -47,7 +48,8 @@ export function worldToScreen(
 export function updateCamera(
     game: modu.Game,
     cameraEntity: modu.Entity,
-    getLocalClientId: () => number | null
+    getLocalClientId: () => number | null,
+    alpha: number
 ): void {
     const localId = getLocalClientId();
     if (localId === null) return;
@@ -63,12 +65,13 @@ export function updateCamera(
     let centerY = 0;
 
     for (const cell of cells) {
-        const transform = cell.get(modu.Transform2D);
+        // Use interpolated positions to match rendered entities
+        cell.interpolate(alpha);
         const sprite = cell.get(modu.Sprite);
         const area = sprite.radius * sprite.radius;
 
-        centerX += transform.x * area;
-        centerY += transform.y * area;
+        centerX += cell.render.interpX * area;
+        centerY += cell.render.interpY * area;
         totalArea += area;
         totalSize += sprite.radius;
     }
@@ -77,8 +80,11 @@ export function updateCamera(
         centerX /= totalArea;
         centerY /= totalArea;
 
-        camera.x += (centerX - camera.x) * camera.smoothing;
-        camera.y += (centerY - camera.y) * camera.smoothing;
+        // Only update camera position if chase is enabled
+        if (cameraChaseEnabled) {
+            camera.x += (centerX - camera.x) * camera.smoothing;
+            camera.y += (centerY - camera.y) * camera.smoothing;
+        }
 
         camera.targetZoom = Math.max(MIN_ZOOM, BASE_ZOOM - (totalSize - INITIAL_RADIUS) * ZOOM_SCALE_FACTOR);
         camera.zoom += (camera.targetZoom - camera.zoom) * camera.smoothing;
@@ -167,7 +173,7 @@ export function createRenderer(
         const alpha = game.getRenderAlpha();
         const camera = cameraEntity.get(modu.Camera2D);
 
-        updateCamera(game, cameraEntity, getLocalClientId);
+        updateCamera(game, cameraEntity, getLocalClientId, alpha);
 
         // Use camera position directly (matches input coordinate conversion)
         const camX = camera.x;

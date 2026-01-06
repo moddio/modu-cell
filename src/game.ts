@@ -34,6 +34,10 @@ let HEIGHT: number;
 let mouseX: number;
 let mouseY: number;
 
+// Debug state
+export let cameraChaseEnabled = true;
+let prevToggleCameraState = false;
+
 function getLocalClientId(): number | null {
     const clientId = game.localClientId;
     if (!clientId || typeof clientId !== 'string') return null;
@@ -64,6 +68,12 @@ function setupInput(getCameraEntity: () => modu.Entity): void {
     input.action('split', {
         type: 'button',
         bindings: ['key: ']
+    });
+
+    // Debug: toggle camera chase with C key
+    input.action('toggleCamera', {
+        type: 'button',
+        bindings: ['key:c']
     });
 }
 
@@ -107,6 +117,21 @@ export function initGame(): void {
     }
 
     setupInput(ensureCameraEntity);
+
+    // System to detect camera toggle key press (rising edge)
+    game.addSystem(() => {
+        const localId = getLocalClientId();
+        if (localId === null) return;
+
+        const playerInput = game.world.getInput(localId);
+        const togglePressed = playerInput?.toggleCamera === true;
+
+        if (togglePressed && !prevToggleCameraState) {
+            cameraChaseEnabled = !cameraChaseEnabled;
+            console.log('[DEBUG] Camera chase:', cameraChaseEnabled ? 'ON' : 'OFF');
+        }
+        prevToggleCameraState = togglePressed;
+    }, { phase: 'update' });
 
     renderer.render = createRenderer(
         game,
