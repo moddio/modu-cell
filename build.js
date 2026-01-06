@@ -327,6 +327,7 @@ async function build() {
     const localEngineUrl = 'http://localhost:3001/dist/modu.min.js';
     const cdnEngineUrl = `https://cdn.moduengine.com/modu.min.js?v=${Date.now()}`;
     const engineUrl = isCI ? cdnEngineUrl : localEngineUrl;
+    console.log("testing");
 
     // Ensure dist directory exists
     if (!fs.existsSync('dist')) {
@@ -355,7 +356,7 @@ async function build() {
                 } else {
                     execSync('lsof -ti:8080 | xargs kill -9 2>/dev/null || true', { stdio: 'ignore' });
                 }
-            } catch {}
+            } catch { }
 
             const { host, port } = await ctx.serve({
                 servedir: 'dist',
